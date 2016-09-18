@@ -6,7 +6,15 @@ import java.util.HashMap;
  * Created by Alex on 08.09.2016.
  */
 public abstract class RegionObject {
+
     private final HashMap<String, Object> properties;
+
+    /**
+     * Create object without any properties
+     */
+    public RegionObject() {
+        this(new HashMap<String, Object>());
+    }
 
     /**
      * Create object with custom properties
@@ -14,13 +22,6 @@ public abstract class RegionObject {
      */
     public RegionObject(HashMap<String, Object> properties) {
         this.properties = properties;
-    }
-
-    /**
-     * Create object without any properties
-     */
-    public RegionObject() {
-        this(new HashMap<String, Object>());
     }
 
     /**
@@ -36,4 +37,20 @@ public abstract class RegionObject {
      */
     @Override
     abstract public String toString();
+
+    /**
+     * Empty RegionObject without properties.
+     * Can use as alternative of null values in RegionMap matrix
+     */
+    public static class EmptyObject extends RegionObject {
+        @Override
+        public boolean isHere(double right, double top) {
+            return false;
+        }
+
+        @Override
+        public String toString() {
+            return " * ";
+        }
+    }
 }

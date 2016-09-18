@@ -1,5 +1,7 @@
 package com.letfar.windfire.map.core;
 
+import com.letfar.windfire.map.helpers.ArrayIndex;
+
 /**
  * Created by Alex on 08.09.2016.
  */
@@ -27,6 +29,9 @@ public class RegionMap {
         this.objectMatrix = new RegionObject[rows][columns];
     }
 
+    public RegionObject getObject(ArrayIndex index) { return objectMatrix[index.i][index.j]; }
+    public void setObject(ArrayIndex index, RegionObject object) { objectMatrix[index.i][index.j] = object; }
+
     public double getMapHeight() { return mapHeight; }
     public double getMapWidth() { return mapWidth; }
 
@@ -42,8 +47,6 @@ public class RegionMap {
     public int getLastIndexTop() { return ((int) (getMapHeight() / getCellHeight())) - 1; }
     public int getLastIndexRight() { return ((int) (getMapWidth() / getCellWidth())) - 1; }
 
-    public RegionObject[][] getObjectMatrix() { return objectMatrix; }
-
     public void iterateMap(RegionMapIterationAction iterationAction) {
         // Start x,y position (left top corner)
         double x = getMapLeft();
@@ -54,7 +57,7 @@ public class RegionMap {
 
             // Move from Left to Right
             for (int j = 0; j <= getLastIndexRight(); j++, x += getCellWidth())
-                iterationAction.doAction(x, y, i, j);
+                iterationAction.doAction(x, y, new ArrayIndex(i, j));
 
             // Now is next matrix line, so reset 'x'
             x = getMapLeft();

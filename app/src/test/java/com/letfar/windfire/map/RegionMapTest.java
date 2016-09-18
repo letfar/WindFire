@@ -2,11 +2,18 @@ package com.letfar.windfire.map;
 
 import com.letfar.windfire.map.concrete_objects.*;
 import com.letfar.windfire.map.core.RegionMap;
-import com.letfar.windfire.map.core.RegionMapHelper;
 import com.letfar.windfire.map.core.RegionObject;
+import com.letfar.windfire.map.helpers.ArrayIndex;
+import com.letfar.windfire.map.helpers.RegionMapHelper;
+import com.letfar.windfire.map.wind.FireChangeCellHandler;
+import com.letfar.windfire.map.wind.FireWindBlowHandler;
+import com.letfar.windfire.map.wind.RegionWind;
+import com.letfar.windfire.map.wind.RegionWind.Direction;
 import org.junit.Test;
 
-import static org.junit.Assert.*;
+import java.util.List;
+
+import static org.junit.Assert.assertEquals;
 
 /**
  * Created by Alex on 08.09.2016.
@@ -58,11 +65,57 @@ public class RegionMapTest {
                 new AiroportRegionObject(),
                 new LakeRegionObject(),
                 new SanatoryRegionObject(),
-                new UrbanRegionObject()
+                new UrbanRegionObject(),
+                new FireRegionObject()
         };
 
         RegionMapHelper.addObjectsToMap(initObjects, regionMap);
 
-        RegionMapHelper.printRegionMap(regionMap);
+        RegionMapHelper.printMap(regionMap);
+    }
+
+    @Test
+    public void test1() {
+        final RegionMap regionMap = new RegionMap(100, 100, 4000, 4000);
+
+        final RegionObject[] initObjects = {
+                new MilitaryStorageRegionObject(),
+                new AiroportRegionObject(),
+                new LakeRegionObject(),
+                new SanatoryRegionObject(),
+                new UrbanRegionObject(),
+                new FireRegionObject()
+        };
+
+        RegionMapHelper.addObjectsToMap(initObjects, regionMap);
+
+        RegionWind wind = new RegionWind() {{
+            windBlowHandlers()
+                    .add(
+                            new FireWindBlowHandler(regionMap) {{
+                                fireChangeCellHandlers()
+                                        .add(
+                                                new FireChangeCellHandler() {
+                                                    @Override
+                                                    public void handleFireMoving(ArrayIndex fireCellIndex, RegionMap regionMap) {
+                                                        RegionObject object = regionMap.getObject(fireCellIndex);
+                                                        if (object instanceof MilitaryStorageRegionObject) {
+                                                            List<ArrayIndex> indexList = RegionMapHelper.findObjectPositionsInMap(MilitaryStorageRegionObject.class, regionMap);
+
+                                                            for (ArrayIndex militaryPos : indexList) {
+                                                                regionMap.setObject(militaryPos, new FireRegionObject());
+                                                            }
+
+                                                        }
+                                                    }
+                                                }
+                                        );
+                            }}
+                    );
+        }};
+
+        wind.blow(Direction.SE, 5, 2000);
+
+        RegionMapHelper.printMap(regionMap);
     }
 }

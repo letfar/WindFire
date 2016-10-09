@@ -5,10 +5,10 @@ import com.letfar.windfire.map.core.RegionObject;
 /**
  * Created by Alex on 14.09.2016.
  */
-public class AiroportRegionObject extends RegionObject {
+public class AiroportRegionObject extends RegionObject{
 
     @Override
-    public boolean isHere(double x, double y) {
+    public boolean isInitialPosition(double x, double y) {
         boolean b1 = x >= -2000 && x <= -1000;
         boolean b2 = y <= -500 && y >= -2000;
         boolean b3 = y <= getLineY(x);

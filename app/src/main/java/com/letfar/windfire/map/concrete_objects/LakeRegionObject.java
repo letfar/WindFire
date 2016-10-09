@@ -7,16 +7,18 @@ import com.letfar.windfire.map.helpers.BezierCurveHelper;
  * Created by Alex on 14.09.2016.
  */
 public class LakeRegionObject extends RegionObject {
+
     @Override
-    public boolean isHere(double x, double y) {
-        boolean b1 = x >= 500 && x <= 2000;
-        boolean b2 = y <= 2000;
+    public boolean isInitialPosition(double x, double y) {
+        boolean xBounds = x >= 500 && x <= 2000;
+        boolean yBounds = y <= 2000;
 
-        double tOfCurrentXY = BezierCurveHelper.besizerFor3Points_getT(x, 500, 1000, 2000);
-        double yCurve = BezierCurveHelper.bezierFor3Points(2000, 1500, 1000, tOfCurrentXY);
-        boolean yIsUpperCurve = y >= yCurve;
+        double tOfCurrentX = BezierCurveHelper.besizerFor3Points_getT(x, 500, 1000, 2000);
+        double yOfCurveByT = BezierCurveHelper.bezierFor3Points_getCoordByT(2000, 1500, 1000, tOfCurrentX);
 
-        return b1 && b2 && yIsUpperCurve;
+        boolean yIsUpperThenCurve = y >= yOfCurveByT;
+
+        return xBounds && yBounds && yIsUpperThenCurve;
     }
 
     @Override

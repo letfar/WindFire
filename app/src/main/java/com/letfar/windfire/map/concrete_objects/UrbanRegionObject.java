@@ -7,8 +7,9 @@ import com.letfar.windfire.map.core.RegionObject;
  */
 public class UrbanRegionObject extends RegionObject {
 
+
     @Override
-    public boolean isHere(double x, double y) {
+    public boolean isInitialPosition(double x, double y) {
         if (x >= -2000 && x < -1500)
             if (y >= 500) return true;
 

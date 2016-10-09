@@ -59,7 +59,7 @@ public class RegionMap {
             for (int j = 0; j <= getLastIndexRight(); j++, x += getCellWidth())
                 iterationAction.doAction(x, y, new ArrayIndex(i, j));
 
-            // Now is next matrix line, so reset 'x'
+            // Now is next matrix line, so resetXY 'x'
             x = getMapLeft();
         }
     }

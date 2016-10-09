@@ -3,15 +3,10 @@ package com.letfar.windfire.map;
 import com.letfar.windfire.map.concrete_objects.*;
 import com.letfar.windfire.map.core.RegionMap;
 import com.letfar.windfire.map.core.RegionObject;
-import com.letfar.windfire.map.helpers.ArrayIndex;
 import com.letfar.windfire.map.helpers.RegionMapHelper;
-import com.letfar.windfire.map.wind.FireChangeCellHandler;
-import com.letfar.windfire.map.wind.FireWindBlowHandler;
-import com.letfar.windfire.map.wind.RegionWind;
-import com.letfar.windfire.map.wind.RegionWind.Direction;
+import com.letfar.windfire.map.core.wind.RegionWind;
+import com.letfar.windfire.map.core.wind.WindBlow;
 import org.junit.Test;
-
-import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 
@@ -84,38 +79,14 @@ public class RegionMapTest {
                 new LakeRegionObject(),
                 new SanatoryRegionObject(),
                 new UrbanRegionObject(),
+                new WoodRegionObject(),
                 new FireRegionObject()
         };
 
         RegionMapHelper.addObjectsToMap(initObjects, regionMap);
-
-        RegionWind wind = new RegionWind() {{
-            windBlowHandlers()
-                    .add(
-                            new FireWindBlowHandler(regionMap) {{
-                                fireChangeCellHandlers()
-                                        .add(
-                                                new FireChangeCellHandler() {
-                                                    @Override
-                                                    public void handleFireMoving(ArrayIndex fireCellIndex, RegionMap regionMap) {
-                                                        RegionObject object = regionMap.getObject(fireCellIndex);
-                                                        if (object instanceof MilitaryStorageRegionObject) {
-                                                            List<ArrayIndex> indexList = RegionMapHelper.findObjectPositionsInMap(MilitaryStorageRegionObject.class, regionMap);
-
-                                                            for (ArrayIndex militaryPos : indexList) {
-                                                                regionMap.setObject(militaryPos, new FireRegionObject());
-                                                            }
-
-                                                        }
-                                                    }
-                                                }
-                                        );
-                            }}
-                    );
-        }};
-
-        wind.blow(Direction.SE, 5, 2000);
-
+        RegionWind wind = new RegionWind(regionMap);
+        wind.registerBlow(new WindBlow(RegionWind.Direction.SE, 5 ,4000));
+        System.out.println();
         RegionMapHelper.printMap(regionMap);
     }
 }

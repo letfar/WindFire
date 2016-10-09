@@ -8,7 +8,7 @@ import com.letfar.windfire.map.core.RegionObject;
 public class MilitaryStorageRegionObject extends RegionObject {
 
     @Override
-    public boolean isHere(double x, double y) {
+    public boolean isInitialPosition(double x, double y) {
         boolean b1 = y <= -500 && y >= -1000;
         boolean b2 = x >= 500 && x <= 1000;
         return  b1 && b2;

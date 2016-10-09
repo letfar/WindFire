@@ -25,7 +25,8 @@ public class RegionMapHelper {
             @Override
             public void doAction(double x, double y, ArrayIndex cellIndex) {
                 for (RegionObject object : objects) {
-                    if (object.isHere(x, y))
+                    if (object.isInitialPosition(x, y))
+//                        System.out.printf("(x=%s, y=%s)\n", x, y);
                         regionMap.setObject(cellIndex, object);
                 }
             }
@@ -67,5 +68,17 @@ public class RegionMapHelper {
                 lastCellIndex.setOf(cellIndex);
             }
         });
+
+        System.out.println();
+    }
+
+    public static void replaceObjects(final Class<?> classToFound, final Class<? extends RegionObject> classToReplace, RegionMap regionMap) {
+        for (ArrayIndex i : findObjectPositionsInMap(classToFound, regionMap)) {
+            try {
+                regionMap.setObject(i, classToReplace.newInstance());
+            } catch (Exception e) {
+                throw new RuntimeException("Can't call default constructor to replace object in map", e);
+            }
+        }
     }
 }
